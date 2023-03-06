@@ -1,22 +1,22 @@
-# Countries
+# Phonebook API
 
-In this exercise, we created an application, in which one can look at data of various countries. The data are fetched from the API https://restcountries.eu, that provides a lot data for different countries in a machine readable format, a so-called REST API.
+In this exercise, we implemented a fullstack phonebook app with a backend written in Node.js and a frontend in react.js. The data are saved in a mongodb database and the app is deployed on heroku at the folowing URL.
 
-The user interface is very simple. The country to be shown is found by typing a search query into the search field.
+* https://peaceful-depths-89341.herokuapp.com/
 
-In this application, it is also possible to see the current weather in the country's capital.
+## Start the application locally
 
-## Start the application
-
-To start an application, do the following :
+To start an application:
 
 ```bash
 # Install dependancies
-$ yarn install
-# create a .env file and put there the API KEY for retrieving data from https://weatherstack.com/
-$ echo "REACT_APP_API_KEY=<YOUR-API-KEY>" > .env
+$ npm install
+
+# create a .env file and put there the MONGODB_URI for connecting to your mongodb database
+$ echo "MONGODB_URI=<YOUR-MONGODB-URI>" > .env
+
 # Start the application
-$ yarn start
+$ npm run dev
 ```
 
-You can then access the app on : http://localhost:3000/
+You can then access the app on : http://localhost:3001/
