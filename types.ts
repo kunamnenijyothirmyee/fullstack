@@ -1,63 +1,39 @@
-export interface Diagnosis {
-  code: string;
+export interface CoursePartBase {
   name: string;
-  latin?: string;
+  exerciseCount: number;
+  description?: string;
 }
 
-export enum Gender {
-  Male = 'male',
-  Female = 'female',
-  Other = 'other'
+export interface CoursePartOne extends CoursePartBase {
+  name: "Fundamentals";
+  description?: string;
 }
 
-interface BaseEntry {
-  id: string;
-  description: string;
-  date: string;
-  specialist: string;
-  diagnosisCodes?: Array<Diagnosis['code']>;
+export interface CoursePartTwo extends CoursePartBase {
+  name: "Using props to pass data";
+  groupProjectCount: number;
 }
 
-export enum HealthCheckRating {
-  'Healthy' = 0,
-  'LowRisk' = 1,
-  'HighRisk' = 2,
-  'CriticalRisk' = 3
+export interface CoursePartThree extends CoursePartBase {
+  name: "Deeper type usage";
+  exerciseSubmissionLink: string;
 }
 
-export interface HealthCheckEntry extends BaseEntry {
-  type: 'HealthCheck';
-  healthCheckRating: HealthCheckRating;
+export interface CoursePartFour extends CoursePartBase {
+    name: "Another course part";
+    comment: string;
+  }
+
+export interface HeaderProps {
+    courseName: string;
 }
 
-export interface OccupationalHealthcareEntry extends BaseEntry {
-  type: 'OccupationalHealthcare';
-  employerName: string;
-  sickLeave?: {
-    startDate: string;
-    endDate: string;
-  };
+type CoursePart = CoursePartOne | CoursePartTwo | CoursePartThree | CoursePartFour;
+
+export interface ContentProps {
+    courseParts: CoursePart[];
 }
 
-export interface HospitalEntry extends BaseEntry {
-  type: 'Hospital';
-  discharge: {
-    date: string;
-    criteria: string;
-  };
-}
-
-export type Entry =
-  | HospitalEntry
-  | OccupationalHealthcareEntry
-  | HealthCheckEntry;
-
-export interface Patient {
-  id: string;
-  name: string;
-  occupation: string;
-  gender: Gender;
-  ssn?: string;
-  dateOfBirth?: string;
-  entries: Entry[];
+export interface PartProps {
+    part: CoursePart;
 }

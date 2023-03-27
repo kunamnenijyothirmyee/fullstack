@@ -1,61 +1,44 @@
 import React from 'react';
-import axios from 'axios';
-import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
-import { Button, Divider, Header, Container } from 'semantic-ui-react';
+import Header from './components/Header'
+import Content from './components/Content'
+import Total from './components/Total'
+import { CoursePartOne, CoursePartTwo, CoursePartThree, CoursePartFour } from './types'
 
-import { apiBaseUrl } from './constants';
-import { useStateValue, setPatientList, setDiagnosesList } from './state';
-import { Patient, Diagnosis } from './types';
+type CoursePart = CoursePartOne | CoursePartTwo | CoursePartThree | CoursePartFour;
 
-import PatientPage from './PatientPage';
-import PatientListPage from './PatientListPage';
 
 const App: React.FC = () => {
-  const [, dispatch] = useStateValue();
-  React.useEffect(() => {
-    axios.get<void>(`${apiBaseUrl}/ping`);
-
-    const fetchPatientList = async () => {
-      try {
-        const { data: patientListFromApi } = await axios.get<Patient[]>(
-          `${apiBaseUrl}/patients`
-        );
-        dispatch(setPatientList(patientListFromApi));
-      } catch (e) {
-        console.error(e);
-      }
-    };
-
-    const fetchDiagnosesList = async () => {
-      try {
-        const { data: diagnosesListFromApi } = await axios.get<Diagnosis[]>(
-          `${apiBaseUrl}/diagnoses`
-        );
-        dispatch(setDiagnosesList(diagnosesListFromApi));
-      } catch (e) {
-        console.error(e);
-      }
-    };
-
-    fetchPatientList();
-    fetchDiagnosesList();
-  }, [dispatch]);
+  const courseName: string = "Half Stack application development";
+  const courseParts: CoursePart[] = [
+    {
+      name: "Fundamentals",
+      exerciseCount: 10,
+      description: "This is an awesome course part"
+    },
+    {
+      name: "Using props to pass data",
+      exerciseCount: 7,
+      groupProjectCount: 3
+    },
+    {
+      name: "Deeper type usage",
+      exerciseCount: 14,
+      description: "Confusing description",
+      exerciseSubmissionLink: "https://fake-exercise-submit.made-up-url.dev"
+    },
+    {
+      name: "Another course part",
+      exerciseCount: 8,
+      description: "Confusing description",
+      comment: "This is a comment"
+    }
+  ];
 
   return (
-    <div className="App">
-      <Router>
-        <Container>
-          <Header as="h1">Patientor</Header>
-          <Button as={Link} to="/" primary>
-            Home
-          </Button>
-          <Divider hidden />
-          <Switch>
-            <Route path="/patients/:id" render={() => <PatientPage />} />
-            <Route path="/" render={() => <PatientListPage />} />
-          </Switch>
-        </Container>
-      </Router>
+    <div>
+      <Header courseName={courseName} />
+      <Content courseParts={courseParts} />
+      <Total courseParts={courseParts} />
     </div>
   );
 };
