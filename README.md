@@ -1,24 +1,19 @@
-# Ultimate hooks
+## GraphQL frontend
 
-In this exercise, we are refactoring [this app](https://github.com/fullstack-hy2020/ultimate-hooks) using custom hooks. This app displays notes and phone numbers fetched from a backend server.
+Through the exercises, we will implement a GraphQL frontend for the GraphQL-library created previously.
 
-However, we noticed that the same code responsible for fetching notes from the backend could be reused in the blog post application. Indeed, only the `baseUrl` differs. As a result, we extracted the code for communicating with a backend server into its own `useResource` hook.
 
-## Start the application
+### Start the application locally
+First, you need to start the backend from the previous exercise. To do so, head to the `part8/library-backend` directory and follow the instructions from the README.
 
-To start an application, do the following :
 
+Then, start the frontend:
 ```bash
 # Install dependancies
 $ npm install
-# Start the JSON Server
-$ npm run server
-# On another terminal, start the application
+
+# Start the application
 $ npm start
 ```
 
-You can then access the app on : http://localhost:3000/
-
-You can also see the content of the JSON Server by heading to:
-* http://localhost:3005/notes
-* http://localhost:3005/persons
+You can then access the app on: http://localhost:3000/. 

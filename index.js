@@ -1,41 +1,32 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './App'
 
-export const useField = (type) => {
-  const [value, setValue] = useState('')
+import { setContext } from 'apollo-link-context'
+import { 
+    ApolloClient, ApolloProvider, HttpLink, InMemoryCache
+} from '@apollo/client' 
 
-  const onChange = (event) => {
-    setValue(event.target.value)
+const authLink = setContext((_, { headers }) => {  
+  const token = localStorage.getItem('library-user-token')  
+  return {    
+    headers: {      
+      ...headers,      
+      authorization: token ? `bearer ${token}` : null,    
+    }  
   }
+})
 
-  return {
-    type,
-    value,
-    onChange
-  }
-}
+const httpLink = new HttpLink({ uri: 'http://localhost:4000' })
 
-export const useResource = (baseUrl) => {
-  const [resources, setResources] = useState([])
+const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: authLink.concat(httpLink)
+  })
 
-  useEffect(() => {
-    axios
-      .get(baseUrl)
-      .then(response => {
-        setResources(response.data)
-      })
-  }, [setResources, baseUrl])
-
-  const create = async newObject => {
-    const response = await axios.post(baseUrl, newObject)
-    setResources(resources.concat(response.data))
-  }
-
-  const service = {
-    create
-  }
-
-  return [
-    resources, service
-  ]
-}
+ReactDOM.render(
+    <ApolloProvider client={client}>
+        <App />
+    </ApolloProvider>, 
+    document.getElementById('root')
+)

@@ -1,41 +1,83 @@
+import React, { useState } from 'react'
+import { useApolloClient } from '@apollo/client'
 
-import React from 'react'
-import { useField, useResource } from './hooks'
+import Authors from './components/Authors'
+import Books from './components/Books'
+import BookForm from './components/BookForm'
+import LoginForm from './components/LoginForm'
+import Recommended from './components/Recommended'
+
+const Notify = ({errorMessage}) => {  
+  if ( !errorMessage ) {    
+    return null  
+  }  
+  return (    
+    <div style={{color: 'red'}}>    
+    {errorMessage}    
+    </div>  
+    )
+ }
 
 const App = () => {
-  const content = useField('text')
-  const name = useField('text')
-  const number = useField('text')
+  const [token, setToken] = useState(null)
+  const [page, setPage] = useState('authors')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const client = useApolloClient()
 
-  const [notes, noteService] = useResource('http://localhost:3005/notes')
-  const [persons, personService] = useResource('http://localhost:3005/persons')
-
-  const handleNoteSubmit = (event) => {
-    event.preventDefault()
-    noteService.create({ content: content.value })
+  const notify = (message) => {    
+    setErrorMessage(message)    
+    setTimeout(() => {      
+      setErrorMessage(null)    
+    }, 10000)  
   }
 
-  const handlePersonSubmit = (event) => {
-    event.preventDefault()
-    personService.create({ name: name.value, number: number.value})
+  const logout = () => {    
+    setToken(null)    
+    localStorage.clear()    
+    client.resetStore()  
+  }
+
+  if (!token) {
+    return (
+      <div>
+        <Notify errorMessage={errorMessage} />
+        <h2>Login</h2>
+        <LoginForm
+          setToken={setToken}
+          setError={notify}
+        />
+      </div>
+    )
   }
 
   return (
     <div>
-      <h2>notes</h2>
-      <form onSubmit={handleNoteSubmit}>
-        <input {...content} />
-        <button>create</button>
-      </form>
-      {notes.map(n => <p key={n.id}>{n.content}</p>)}
+      <div>
+      <button onClick={logout}>logout</button>
+        <button onClick={() => setPage('authors')}>authors</button>
+        <button onClick={() => setPage('books')}>books</button>
+        <button onClick={() => setPage('recommended')}>recommended</button>
+        <button onClick={() => setPage('add')}>add book</button>
+      </div>
 
-      <h2>persons</h2>
-      <form onSubmit={handlePersonSubmit}>
-        name <input {...name} /> <br/>
-        number <input {...number} />
-        <button>create</button>
-      </form>
-      {persons.map(n => <p key={n.id}>{n.name} {n.number}</p>)}
+      <Notify errorMessage={errorMessage} />
+
+      <Authors
+        show={page === 'authors'} notify={notify}
+      />
+
+      <Books
+        show={page === 'books'}
+      />
+
+      <Recommended
+        show={page === 'recommended'} notify={notify}
+      />
+
+      <BookForm
+        show={page === 'add'} notify={notify}
+      />
+
     </div>
   )
 }
